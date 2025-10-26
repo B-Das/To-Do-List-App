@@ -3,8 +3,26 @@ const taskForm = document.getElementById("taskForm");
 const taskInput = document.getElementById("taskInput");
 const taskList = document.getElementById("taskList");
 const totalTasks = document.getElementById("totalTasks");
+const settingsIcon = document.querySelector(".settings-icon");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let isDarkMode = localStorage.getItem("darkMode") === "true";
+
+function applyTheme() {
+    if (isDarkMode) {
+        document.body.classList.add("dark-mode");
+    } else {
+        document.body.classList.remove("dark-mode");
+    }
+}
+
+function toggleTheme() {
+    isDarkMode = !isDarkMode;
+    localStorage.setItem("darkMode", isDarkMode);
+    applyTheme();
+}
+
+settingsIcon.addEventListener("click", toggleTheme);
 
 function renderTasks() {
   taskList.innerHTML = "";
@@ -121,4 +139,5 @@ taskList.addEventListener("change", (event) => {
   }
 });
 
+applyTheme();
 renderTasks();

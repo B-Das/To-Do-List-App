@@ -6,6 +6,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -28,8 +29,14 @@ header h1 {
   margin: 0;
 }
 
-header i {
+.settings-icon {
   font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.settings-icon:hover {
+  transform: rotate(90deg);
 }
 
 /* Task Form */
@@ -59,6 +66,7 @@ header i {
   padding: 15px;
   background-color: #fff;
   border-bottom: 1px solid #eee;
+  transition: background-color 0.3s, border-bottom-color 0.3s;
 }
 
 #taskList li:first-child {
@@ -95,4 +103,25 @@ header i {
   margin-left: auto;
   display: flex;
   gap: 10px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #121212;
+  color: #fff;
+}
+
+body.dark-mode #taskInput {
+  background-color: #333;
+  color: #fff;
+  border-color: #444;
+}
+
+body.dark-mode #taskList li {
+  background-color: #222;
+  border-bottom-color: #333;
+}
+
+body.dark-mode #taskList li.completed label {
+  color: #888;
 }
