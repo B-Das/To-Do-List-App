@@ -1,11 +1,11 @@
+
+const taskForm = document.getElementById("taskForm");
 const taskInput = document.getElementById("taskInput");
-const addButton = document.getElementById("addButton");
 const taskList = document.getElementById("taskList");
 const totalTasks = document.getElementById("totalTasks");
 
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-// function to render tasks in the list
 function renderTasks() {
   taskList.innerHTML = "";
   tasks.forEach((task, index) => {
@@ -19,47 +19,56 @@ function renderTasks() {
     }</label>
       <button class="deleteButton">Delete</button>
     `;
+    li.dataset.index = index;
     taskList.appendChild(li);
-
-    const deleteButton = li.querySelector(".deleteButton");
-    deleteButton.addEventListener("click", () => {
-      tasks.splice(index, 1);
-      renderTasks();
-    });
-
-    const taskCheckbox = li.querySelector(`#task_${index}`);
-    taskCheckbox.addEventListener("change", () => {
-      task.completed = !task.completed;
-      if (task.completed) {
-        li.classList.add("completed");
-      } else {
-        li.classList.remove("completed");
-      }
-    });
   });
 
   totalTasks.textContent = tasks.length;
 }
 
-// function to add a new task to the list
-function addTask() {
+function addTask(event) {
+  event.preventDefault();
   const title = taskInput.value.trim();
   if (title) {
     tasks.push({ title, completed: false });
+    saveTasks();
     renderTasks();
     taskInput.value = "";
   }
 }
 
-// event listener for the add button
-addButton.addEventListener("click", addTask);
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  saveTasks();
+  renderTasks();
+}
 
-// event listener for the enter key press in the task input
-taskInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    addTask();
+function toggleTask(index) {
+  tasks[index].completed = !tasks[index].completed;
+  saveTasks();
+  renderTasks();
+}
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+taskForm.addEventListener("submit", addTask);
+
+taskList.addEventListener("click", (event) => {
+  const target = event.target;
+  if (target.classList.contains("deleteButton")) {
+    const index = target.closest("li").dataset.index;
+    deleteTask(index);
   }
 });
 
-// initial rendering of tasks
+taskList.addEventListener("change", (event) => {
+  const target = event.target;
+  if (target.type === "checkbox") {
+    const index = target.closest("li").dataset.index;
+    toggleTask(index);
+  }
+});
+
 renderTasks();
